@@ -91,3 +91,11 @@ body {
     padding: 1rem 0;
 }
 
+/*background image for login*/
+.bg-image-custom{
+    background-image: url(/Images/scc.jpg);
+    background-size: cover;
+    background-position: center;
+    height: 400px;
+}
+
