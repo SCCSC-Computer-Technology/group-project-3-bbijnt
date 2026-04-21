@@ -23,6 +23,13 @@
             width: 80%;
         }
 
+        .table-scrollable {
+                max-height: 400px;
+                overflow-y: auto;
+                overflow-x: auto;
+        }
+
+
         @@media (width <= 500px) {
             .btn-container {
                 flex-direction: column;
@@ -47,7 +54,7 @@
             @TempData["success"]
         </div>
     }
-
+<div class="table-scrollable">
     <table class="table table-bordered table-striped">
         <thead>
             <tr>
@@ -76,6 +83,7 @@
                     </td>
                 </tr>
             }
-        </tbody>
-    </table>
+          </tbody>
+      </table>
+    </div>
 </div>
