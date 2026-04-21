@@ -4,6 +4,7 @@ using CapstoneProject.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CapstoneProject.Migrations
 {
     [DbContext(typeof(CapstoneProjectDbContext))]
-    partial class CapstoneProjectDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260421161503_AddSeedData")]
+    partial class AddSeedData
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -254,7 +257,7 @@ namespace CapstoneProject.Migrations
 
                     b.HasKey("DonationID");
 
-                    b.ToTable("Donations", (string)null);
+                    b.ToTable("Donations");
                 });
 
             modelBuilder.Entity("CapstoneProject.Models.Item", b =>
@@ -290,7 +293,7 @@ namespace CapstoneProject.Migrations
 
                     b.HasIndex("SubcategoryID");
 
-                    b.ToTable("Items", (string)null);
+                    b.ToTable("Items");
 
                     b.HasData(
                         new
@@ -399,7 +402,7 @@ namespace CapstoneProject.Migrations
 
                     b.HasKey("CategoryID");
 
-                    b.ToTable("ItemCategories", (string)null);
+                    b.ToTable("ItemCategories");
 
                     b.HasData(
                         new
@@ -458,7 +461,7 @@ namespace CapstoneProject.Migrations
 
                     b.HasIndex("CategoryID");
 
-                    b.ToTable("ItemSubcategories", (string)null);
+                    b.ToTable("ItemSubcategories");
 
                     b.HasData(
                         new
@@ -656,7 +659,7 @@ namespace CapstoneProject.Migrations
 
                     b.HasKey("UserID");
 
-                    b.ToTable("LiabilityForms", (string)null);
+                    b.ToTable("LiabilityForms");
                 });
 
             modelBuilder.Entity("CapstoneProject.Models.Purchasing", b =>
@@ -687,7 +690,7 @@ namespace CapstoneProject.Migrations
 
                     b.HasKey("PurchaseID");
 
-                    b.ToTable("Purchases", (string)null);
+                    b.ToTable("Purchases");
                 });
 
             modelBuilder.Entity("CapstoneProject.Models.ResourceRequest", b =>
@@ -862,7 +865,7 @@ namespace CapstoneProject.Migrations
 
                     b.HasKey("RequestID");
 
-                    b.ToTable("ResourceRequests", (string)null);
+                    b.ToTable("ResourceRequests");
                 });
 
             modelBuilder.Entity("CapstoneProject.Models.StaffRegister", b =>
@@ -889,7 +892,7 @@ namespace CapstoneProject.Migrations
 
                     b.HasKey("UserID");
 
-                    b.ToTable("StaffRegisters", (string)null);
+                    b.ToTable("StaffRegisters");
                 });
 
             modelBuilder.Entity("CapstoneProject.Models.Transaction", b =>
@@ -919,7 +922,7 @@ namespace CapstoneProject.Migrations
 
                     b.HasKey("TransactionID");
 
-                    b.ToTable("Transactions", (string)null);
+                    b.ToTable("Transactions");
                 });
 
             modelBuilder.Entity("CapstoneProject.Models.TransactionLineItem", b =>
@@ -943,7 +946,7 @@ namespace CapstoneProject.Migrations
 
                     b.HasIndex("ItemID");
 
-                    b.ToTable("TransactionLineItems", (string)null);
+                    b.ToTable("TransactionLineItems");
                 });
 
             modelBuilder.Entity("CapstoneProject.Models.UserSurvey", b =>
@@ -1078,7 +1081,7 @@ namespace CapstoneProject.Migrations
 
                     b.HasKey("SurveyID");
 
-                    b.ToTable("UserSurveys", (string)null);
+                    b.ToTable("UserSurveys");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
