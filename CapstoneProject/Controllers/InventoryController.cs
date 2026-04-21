@@ -3,6 +3,8 @@ using CapstoneProject.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using CapstoneProject.Services;
+using System.Drawing;
 
 namespace CapstoneProject.Controllers
 {
@@ -24,7 +26,33 @@ namespace CapstoneProject.Controllers
                 .Include(i => i.ItemSubcategory)
                 .ToList();
 
+
+
+
             return View(items);
+        }
+
+        public ActionResult GetBarcodeImage(int? id)
+        {
+            if (id == null)
+                return NotFound();
+
+            var item = _db.Items.Find(id);
+
+            if (item == null)
+                return NotFound();
+
+
+            var barcodeText = BarcodeHelper.FormatUUIDForBarcode(item.UUID);
+            Bitmap barcodeImage = BarcodeHelper.CreateBarcodeImage(barcodeText);
+
+
+
+            using (MemoryStream ms = new MemoryStream())
+            {
+                barcodeImage.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
+                return File(ms.ToArray(), "image/png");
+            }
         }
 
         // Show create item form
