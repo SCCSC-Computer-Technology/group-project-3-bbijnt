@@ -14,7 +14,7 @@ namespace CapstoneProject.Models
         [Required]
         public required int SubcategoryID { get; set; }
         [Required]
-        [DisplayName("UPC")]
+        [DisplayName("UUID")]
         public required string UUID { get; set; }
 
         [Required]
