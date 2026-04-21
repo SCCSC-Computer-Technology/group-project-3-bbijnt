@@ -180,7 +180,98 @@ public class CapstoneProjectDbContext : IdentityDbContext<CapstoneProjectUser>
         );
 
 
-
+        modelBuilder.Entity<Item>().HasData(
+            new Item
+            {
+                ItemID = 1,
+                SubcategoryID = 1, //milk
+                Type = "Gallon-Whole",
+                UUID = Guid.NewGuid().ToString(),  //creates 128 bit UUID that we can use for barcode
+                Description = "Gallon of Whole milk",
+                Quantity = 1, 
+                PointCost = 5
+            },
+            new Item
+            {
+                ItemID = 2,
+                SubcategoryID = 2, //cheese
+                Type = "Cheddar",
+                UUID = Guid.NewGuid().ToString(),
+                Description = "Aged cheddar cheese",
+                Quantity = 2.5m,
+                PointCost = 7
+            },
+            new Item
+            {
+                ItemID = 3,
+                SubcategoryID = 3,//yog
+                Type = "Greek",
+                UUID = Guid.NewGuid().ToString(),
+                Description = "Greek yogurt",
+                Quantity = 1,
+                PointCost = 3
+            },
+            new Item
+            {
+                ItemID = 4,
+                SubcategoryID = 1,//fruit
+                Type = "Apple",
+                UUID = Guid.NewGuid().ToString(),
+                Description = "Fresh red apples",
+                Quantity = 3,
+                PointCost = 2
+            },
+            new Item
+            {
+                ItemID =5,
+                SubcategoryID = 2, //veg
+                Type = "Carrot",
+                UUID = Guid.NewGuid().ToString(),
+                Description = "Carrots",
+                Quantity = 5.0m, 
+                PointCost = 1
+            },
+            new Item
+            {
+                ItemID = 6,
+                SubcategoryID = 1, //can meat
+                Type = "Spam",
+                UUID = Guid.NewGuid().ToString(),
+                Description = "Canned Spam",
+                Quantity = 12.0m, 
+                PointCost = 6
+            },
+            new Item
+            {
+                ItemID =7,
+                SubcategoryID = 3, //other can
+                Type = "Tomato Soup",
+                UUID = Guid.NewGuid().ToString(),
+                Description = "Canned tomato soup",
+                Quantity = 8.0m,
+                PointCost = 3
+            },
+            new Item
+            {
+                ItemID = 8,
+                SubcategoryID = 2, //box pasta
+                Type = "Spaghetti",
+                UUID = Guid.NewGuid().ToString(),
+                Description = "Box of spaghetti pasta",
+                Quantity = 1.0m, 
+                PointCost = 2
+            },
+            new Item
+            {
+                ItemID = 9,
+                SubcategoryID = 4, //rice
+                Type = "Basmati",
+                UUID = Guid.NewGuid().ToString(),
+                Description = "Premium basmati rice",
+                Quantity = 2.0m, 
+                PointCost = 5
+            }
+        );
 
 
 
