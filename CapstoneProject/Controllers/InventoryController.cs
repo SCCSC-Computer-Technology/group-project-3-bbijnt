@@ -20,86 +20,116 @@ namespace CapstoneProject.Controllers
         // List all inventory items
         public IActionResult Index()
         {
-            var objInventoryList = _db.Items
+            var items = _db.Items
                 .Include(i => i.ItemSubcategory)
                 .ToList();
-            return View(objInventoryList);
+
+            return View(items);
         }
 
         // Show create item form
+        [HttpGet]
+        [HttpGet]
+        public IActionResult Create()
+        {
+            var item = new Item
+            {
+                UUID = "",
+                Description = "",
+                SubcategoryID = 0,
+                Quantity = 0,
+                PointCost = 0
+            };
+
+            return View(item);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult Create(Item obj)
         {
-            return View(obj);
+            if (!ModelState.IsValid)
+            {
+                return View(obj);
+            }
+
+            _db.Items.Add(obj);
+            _db.SaveChanges();
+
+            TempData["success"] = "Item created successfully";
+            return RedirectToAction(nameof(Index));
         }
 
-        // Create a new item
-        [HttpPost, ActionName("Create")]
-        public IActionResult CreatePOST([FromBody] Item obj)
-        {
-            if (!ModelState.IsValid)
-                return BadRequest("ModelState invalid");
-            try
-            {
-                _db.Items.Add(obj);
-                _db.SaveChanges();
-                return Ok();
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"Error: {ex.Message}");
-            }
-        }
+
 
         // Show edit item form
-        public IActionResult Edit(Item obj)
+        [HttpGet]
+        public IActionResult Edit(int? id)
         {
-            var objFromDb = _db.Items.Where(x => x.ItemID == obj.ItemID).Include(x => x.ItemSubcategory).SingleOrDefault();
-            if (objFromDb == null)
+            if (id == null)
                 return NotFound();
-            return View(objFromDb);
+
+            var item = _db.Items
+                .Include(i => i.ItemSubcategory)
+                .FirstOrDefault(i => i.ItemID == id);
+
+            if (item == null)
+                return NotFound();
+
+            return View(item);
         }
 
         // Edit an item
-        [HttpPost, ActionName("Edit")]
-        public IActionResult EditPOST([FromBody] Item obj)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Edit(Item obj)
         {
             if (!ModelState.IsValid)
-                return BadRequest();
+            {
+                return View(obj);
+            }
+
             _db.Items.Update(obj);
             _db.SaveChanges();
+
             TempData["success"] = "Item updated successfully";
-            return Ok();
+            return RedirectToAction(nameof(Index));
         }
 
         // Show delete item confirmation
-        public IActionResult Delete(string? itemId)
+        [HttpGet]
+        public IActionResult Delete(int? id)
         {
-            if (string.IsNullOrEmpty(itemId))
+            if (id == null)
                 return NotFound();
-            if (!int.TryParse(itemId, out int id))
-                return BadRequest();
-            var itemFromDb = _db.Items.Find(id);
-            if (itemFromDb == null)
+
+            var item = _db.Items
+                .Include(i => i.ItemSubcategory)
+                .FirstOrDefault(i => i.ItemID == id);
+
+            if (item == null)
                 return NotFound();
-            // Get subcategory name
-            var subcategory = _db.ItemSubcategories.FirstOrDefault(sc => sc.SubcategoryID == itemFromDb.SubcategoryID);
-            ViewBag.SubcategoryName = subcategory != null ? subcategory.Name : "Unknown";
-            return View(itemFromDb);
+
+            return View(item);
         }
 
         // Delete an item
         [HttpPost, ActionName("Delete")]
-        public IActionResult DeletePOST(string? itemId)
+        [ValidateAntiForgeryToken]
+        public IActionResult DeletePost(int? id)
         {
-            if (string.IsNullOrEmpty(itemId) || !int.TryParse(itemId, out int id))
-                return BadRequest();
-            var obj = _db.Items.Find(id);
-            if (obj == null)
+            if (id == null)
                 return NotFound();
-            _db.Items.Remove(obj);
+
+            var item = _db.Items.Find(id);
+            if (item == null)
+                return NotFound();
+
+            _db.Items.Remove(item);
             _db.SaveChanges();
+
             TempData["success"] = "Item deleted successfully";
-            return RedirectToAction("LookUp", "Inventory");
+            return RedirectToAction(nameof(Index));
         }
 
         // List all inventory items for lookup
