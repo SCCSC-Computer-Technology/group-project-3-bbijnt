@@ -1,4 +1,5 @@
 ﻿using System.Drawing;
+using System.Drawing.Text;
 
 namespace CapstoneProject.Services
 {
@@ -9,17 +10,25 @@ namespace CapstoneProject.Services
             return "*" + uuid + "*";
         }
 
-        public static Bitmap CreateBarcodeImage(string barcodeText, string fontFamily = "fre3of9x", int fontSize = 48)
+        public static Bitmap CreateBarcodeImage(string barcodeText, int fontSize = 48)
         {
-            Font font = new Font(fontFamily, fontSize);
-            Bitmap barcodeBitmap = new Bitmap(600, 150);
+            string fontPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "font", "fre3of9x.ttf");
+
+            PrivateFontCollection fontCollection = new PrivateFontCollection(); //custom font collection for barcode font
+            fontCollection.AddFontFile(fontPath);
+
+            Font barcodeFont = new Font(fontCollection.Families[0], fontSize);
+            Font uuidFont = new Font("Arial", 16);
+            
+            Bitmap barcodeBitmap = new Bitmap(1500, 150);
             Graphics g = Graphics.FromImage(barcodeBitmap);
 
             g.Clear(Color.White); //white background for barcode
             g.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAlias;
 
             Brush textBrush = Brushes.Black;
-            g.DrawString(barcodeText, font, textBrush, new PointF(10, 30));
+            g.DrawString(barcodeText, barcodeFont, textBrush, new PointF(10, 30));
+            g.DrawString(barcodeText.Trim('*'), uuidFont, textBrush, new PointF(400, 125));
             g.Dispose();
 
             return barcodeBitmap;
