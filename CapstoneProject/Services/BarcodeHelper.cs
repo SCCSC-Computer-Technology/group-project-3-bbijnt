@@ -20,15 +20,15 @@ namespace CapstoneProject.Services
             Font barcodeFont = new Font(fontCollection.Families[0], fontSize);
             Font uuidFont = new Font("Arial", 16);
             
-            Bitmap barcodeBitmap = new Bitmap(1500, 150);
+            Bitmap barcodeBitmap = new Bitmap(1600, 200);
             Graphics g = Graphics.FromImage(barcodeBitmap);
 
             g.Clear(Color.White); //white background for barcode
             g.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAlias;
 
             Brush textBrush = Brushes.Black;
-            g.DrawString(barcodeText, barcodeFont, textBrush, new PointF(10, 30));
-            g.DrawString(barcodeText.Trim('*'), uuidFont, textBrush, new PointF(400, 125));
+            g.DrawString(barcodeText, barcodeFont, textBrush, new PointF(110, 30));
+            g.DrawString(barcodeText.Trim('*'), uuidFont, textBrush, new PointF(500, 125));
             g.Dispose();
 
             return barcodeBitmap;

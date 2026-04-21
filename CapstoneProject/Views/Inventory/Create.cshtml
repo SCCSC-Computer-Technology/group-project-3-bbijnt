@@ -8,7 +8,9 @@
         <div asp-validation-summary="All" class="text-danger"></div>
         <div class="mb-3">
             <label asp-for="UUID" class="form-label"></label>
+            <button type="button" class="btn btn-info btn-sm" id="generateUUID">Generate UUID</button>
             <input asp-for="UUID" class="form-control" />
+            
             <span asp-validation-for="UUID" class="text-danger"></span>
         </div>
 
@@ -49,4 +51,20 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        window.onload = function() {
+            const generateButton = document.getElementById('generateUUID');
+
+            generateButton.addEventListener('click', function() {
+                const uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+                    var r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 0x3 | 0x8);
+                    return v.toString(16);
+                }); //creates random string in UUID format
+            
+            //puts UUID in UUID field
+            document.getElementById("UUID").value = uuid;
+            });
+        };
+    </script>
 }
