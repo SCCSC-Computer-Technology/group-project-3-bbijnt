@@ -37,240 +37,74 @@ public class CapstoneProjectDbContext : IdentityDbContext<CapstoneProjectUser>
         modelBuilder.Entity<CapstoneProjectUser>()
             .HasIndex(x=>x.StudentId).IsUnique();
 
-        //SEED DEFAULT DATA FOR CATEGORIES  !!RUN "Update-Database" IN PACKAGE MANAGER CONSOLE TO ADD!!
+        //SEED DEFAULT DATA FOR CATEGORIES
+        //!!RUN "Update-Database" IN PACKAGE MANAGER CONSOLE TO ADD!!
         modelBuilder.Entity<ItemCategory>().HasData(
-            new ItemCategory { CategoryID = 1, Name = "Dairy" }
+            new ItemCategory { CategoryID = 1, Name = "Dairy" },
+            new ItemCategory { CategoryID = 2, Name = "Produce" },
+            new ItemCategory { CategoryID = 3, Name = "Canned Products" },
+            new ItemCategory { CategoryID = 4, Name = "Grains/Pasta" },
+            new ItemCategory { CategoryID = 5, Name = "Laundry" },
+            new ItemCategory { CategoryID = 6, Name = "Personal Care" },
+            new ItemCategory { CategoryID = 7, Name = "Baby Care" }
         );
 
+        // seed default sub categorys
         modelBuilder.Entity<ItemSubcategory>().HasData(
-            new ItemSubcategory { SubcategoryID = 1, CategoryID = 1, Name = "Milk" }
+            // dairy sub Cs
+            new ItemSubcategory { SubcategoryID = 1, CategoryID = 1, Name = "Milk" },
+            new ItemSubcategory { SubcategoryID = 2, CategoryID = 1, Name = "Cheese" },
+            new ItemSubcategory { SubcategoryID = 3, CategoryID = 1, Name = "Yogurt" },
+            new ItemSubcategory { SubcategoryID = 4, CategoryID = 1, Name = "Butter" },
+
+            // produce sub Cs
+            new ItemSubcategory { SubcategoryID = 5, CategoryID = 2, Name = "Fruit" },
+            new ItemSubcategory { SubcategoryID = 6, CategoryID = 2, Name = "Vegetable" },
+
+            // canned products sub Cs
+            new ItemSubcategory { SubcategoryID = 7, CategoryID = 3, Name = "Canned Meat" },
+            new ItemSubcategory { SubcategoryID = 8, CategoryID = 3, Name = "Canned Vegetable" },
+            new ItemSubcategory { SubcategoryID = 9, CategoryID = 3, Name = "Other Can Food" },
+
+            // grains/pasta sub Cs
+            new ItemSubcategory { SubcategoryID = 10, CategoryID = 4, Name = "Bread" },
+            new ItemSubcategory { SubcategoryID = 11, CategoryID = 4, Name = "Box Pasta" },
+            new ItemSubcategory { SubcategoryID = 12, CategoryID = 4, Name = "Rice" },
+            new ItemSubcategory { SubcategoryID = 13, CategoryID = 4, Name = "Other Grains" },
+
+            //laundry sub Cs
+            new ItemSubcategory { SubcategoryID = 14, CategoryID = 5, Name = "Liquid Detergent" },
+            new ItemSubcategory { SubcategoryID = 15, CategoryID = 5, Name = "Dry Detergent" },
+            new ItemSubcategory { SubcategoryID = 16, CategoryID = 5, Name = "Bleach" },
+            new ItemSubcategory { SubcategoryID = 17, CategoryID = 5, Name = "Other Laundry" },
+
+            //personal care sub Cs
+            new ItemSubcategory { SubcategoryID = 18, CategoryID = 6, Name = "Body Soap" },
+            new ItemSubcategory { SubcategoryID = 19, CategoryID = 6, Name = "Shampoo" },
+            new ItemSubcategory { SubcategoryID = 20, CategoryID = 6, Name = "Conditioner" },
+            new ItemSubcategory { SubcategoryID = 21, CategoryID = 6, Name = "Toothpaste" },
+            new ItemSubcategory { SubcategoryID = 22, CategoryID = 6, Name = "Hand Soap" },
+            new ItemSubcategory { SubcategoryID = 23, CategoryID = 6, Name = "Deodorant" },
+
+            //baby care sub Cs
+            new ItemSubcategory { SubcategoryID = 24, CategoryID = 7, Name = "Diapers" },
+            new ItemSubcategory { SubcategoryID = 25, CategoryID = 7, Name = "Wipes" },
+            new ItemSubcategory { SubcategoryID = 26, CategoryID = 7, Name = "Lotion" },
+            new ItemSubcategory { SubcategoryID = 27, CategoryID = 7, Name = "Shampoo" },
+            new ItemSubcategory { SubcategoryID = 28, CategoryID = 7, Name = "Powder" }
         );
 
-        modelBuilder.Entity<ItemSubcategory>().HasData(
-            new ItemSubcategory { SubcategoryID = 2, CategoryID = 1, Name = "Cheese" }
-        );
-
-        modelBuilder.Entity<ItemSubcategory>().HasData(
-            new ItemSubcategory { SubcategoryID = 3, CategoryID = 1, Name = "Yogurt" }
-        );
-
-        modelBuilder.Entity<ItemSubcategory>().HasData(
-            new ItemSubcategory { SubcategoryID = 4, CategoryID = 1, Name = "Butter" }
-        );
-
-        modelBuilder.Entity<ItemCategory>().HasData(
-            new ItemCategory { CategoryID = 2, Name = "Produce" }
-        );
-
-        modelBuilder.Entity<ItemSubcategory>().HasData(
-            new ItemSubcategory { SubcategoryID = 1, CategoryID = 2, Name = "Fruit" }
-        );
-
-        modelBuilder.Entity<ItemSubcategory>().HasData(
-            new ItemSubcategory { SubcategoryID = 2, CategoryID = 2, Name = "Vegetable" }
-        );
-
-
-        modelBuilder.Entity<ItemCategory>().HasData(
-            new ItemCategory { CategoryID = 3, Name = "Canned Products" }
-        );
-
-        modelBuilder.Entity<ItemSubcategory>().HasData(
-            new ItemSubcategory { SubcategoryID = 1, CategoryID = 3, Name = "Canned Meat" }
-        );
-
-        modelBuilder.Entity<ItemSubcategory>().HasData(
-            new ItemSubcategory { SubcategoryID = 2, CategoryID = 3, Name = "Canned Vegetable" }
-        );
-
-        modelBuilder.Entity<ItemSubcategory>().HasData(
-            new ItemSubcategory { SubcategoryID = 3, CategoryID = 3, Name = "Other Can Food" }
-        );
-
-        modelBuilder.Entity<ItemCategory>().HasData(
-            new ItemCategory { CategoryID = 4, Name = "Grains/Pasta" }
-        );
-
-        modelBuilder.Entity<ItemSubcategory>().HasData(
-            new ItemSubcategory { SubcategoryID = 1, CategoryID = 4, Name = "Bread" }
-        );
-
-        modelBuilder.Entity<ItemSubcategory>().HasData(
-            new ItemSubcategory { SubcategoryID = 2, CategoryID = 4, Name = "Box Pasta" }
-        );
-
-        modelBuilder.Entity<ItemSubcategory>().HasData(
-            new ItemSubcategory { SubcategoryID = 3, CategoryID = 4, Name = "Rice" }
-        );
-
-        modelBuilder.Entity<ItemSubcategory>().HasData(
-            new ItemSubcategory { SubcategoryID = 4, CategoryID = 4, Name = "Other Grains" }
-        );
-
-        modelBuilder.Entity<ItemCategory>().HasData(
-        new ItemCategory { CategoryID = 5, Name = "Laundry" }
-        );
-
-        modelBuilder.Entity<ItemSubcategory>().HasData(
-            new ItemSubcategory { SubcategoryID = 1, CategoryID = 5, Name = "Liquid Detergent" }
-        );
-
-        modelBuilder.Entity<ItemSubcategory>().HasData(
-            new ItemSubcategory { SubcategoryID = 2, CategoryID = 5, Name = "Dry Detergent" }
-        );
-
-        modelBuilder.Entity<ItemSubcategory>().HasData(
-            new ItemSubcategory { SubcategoryID = 3, CategoryID = 5, Name = "Bleach" }
-        );
-
-        modelBuilder.Entity<ItemSubcategory>().HasData(
-            new ItemSubcategory { SubcategoryID = 4, CategoryID = 5, Name = "Other Laundry" }
-        );
-
-        modelBuilder.Entity<ItemCategory>().HasData(
-        new ItemCategory { CategoryID = 6, Name = "Personal Care" }
-        );
-
-        modelBuilder.Entity<ItemSubcategory>().HasData(
-            new ItemSubcategory { SubcategoryID = 1, CategoryID = 6, Name = "Body Soap" }
-        );
-
-        modelBuilder.Entity<ItemSubcategory>().HasData(
-            new ItemSubcategory { SubcategoryID = 2, CategoryID = 6, Name = "Shampoo" }
-        );
-
-        modelBuilder.Entity<ItemSubcategory>().HasData(
-            new ItemSubcategory { SubcategoryID = 3, CategoryID = 6, Name = "Conditioner" }
-        );
-
-        modelBuilder.Entity<ItemSubcategory>().HasData(
-            new ItemSubcategory { SubcategoryID = 4, CategoryID = 6, Name = "Toothpaste" }
-        );
-
-        modelBuilder.Entity<ItemSubcategory>().HasData(
-            new ItemSubcategory { SubcategoryID = 5, CategoryID = 6, Name = "Hand Soap" }
-        );
-
-        modelBuilder.Entity<ItemSubcategory>().HasData(
-            new ItemSubcategory { SubcategoryID = 6, CategoryID = 6, Name = "Deodorant" }
-        );
-
-        modelBuilder.Entity<ItemCategory>().HasData(
-        new ItemCategory { CategoryID = 7, Name = "Baby Care" }
-        );
-
-        modelBuilder.Entity<ItemSubcategory>().HasData(
-            new ItemSubcategory { SubcategoryID = 1, CategoryID = 6, Name = "Diapers" }
-        );
-
-        modelBuilder.Entity<ItemSubcategory>().HasData(
-            new ItemSubcategory { SubcategoryID = 2, CategoryID = 6, Name = "Wipes" }
-        );
-
-        modelBuilder.Entity<ItemSubcategory>().HasData(
-            new ItemSubcategory { SubcategoryID = 3, CategoryID = 6, Name = "Lotion" }
-        );
-
-        modelBuilder.Entity<ItemSubcategory>().HasData(
-            new ItemSubcategory { SubcategoryID = 4, CategoryID = 6, Name = "Shampoo" }
-        );
-
-        modelBuilder.Entity<ItemSubcategory>().HasData(
-            new ItemSubcategory { SubcategoryID = 5, CategoryID = 6, Name = "Powder" }
-        );
-
-
-        modelBuilder.Entity<Item>().HasData(
-            new Item
-            {
-                ItemID = 1,
-                SubcategoryID = 1, //milk
-                Type = "Gallon-Whole",
-                UUID = Guid.NewGuid().ToString(),  //creates 128 bit UUID that we can use for barcode
-                Description = "Gallon of Whole milk",
-                Quantity = 1, 
-                PointCost = 5
-            },
-            new Item
-            {
-                ItemID = 2,
-                SubcategoryID = 2, //cheese
-                Type = "Cheddar",
-                UUID = Guid.NewGuid().ToString(),
-                Description = "Aged cheddar cheese",
-                Quantity = 2.5m,
-                PointCost = 7
-            },
-            new Item
-            {
-                ItemID = 3,
-                SubcategoryID = 3,//yog
-                Type = "Greek",
-                UUID = Guid.NewGuid().ToString(),
-                Description = "Greek yogurt",
-                Quantity = 1,
-                PointCost = 3
-            },
-            new Item
-            {
-                ItemID = 4,
-                SubcategoryID = 1,//fruit
-                Type = "Apple",
-                UUID = Guid.NewGuid().ToString(),
-                Description = "Fresh red apples",
-                Quantity = 3,
-                PointCost = 2
-            },
-            new Item
-            {
-                ItemID =5,
-                SubcategoryID = 2, //veg
-                Type = "Carrot",
-                UUID = Guid.NewGuid().ToString(),
-                Description = "Carrots",
-                Quantity = 5.0m, 
-                PointCost = 1
-            },
-            new Item
-            {
-                ItemID = 6,
-                SubcategoryID = 1, //can meat
-                Type = "Spam",
-                UUID = Guid.NewGuid().ToString(),
-                Description = "Canned Spam",
-                Quantity = 12.0m, 
-                PointCost = 6
-            },
-            new Item
-            {
-                ItemID =7,
-                SubcategoryID = 3, //other can
-                Type = "Tomato Soup",
-                UUID = Guid.NewGuid().ToString(),
-                Description = "Canned tomato soup",
-                Quantity = 8.0m,
-                PointCost = 3
-            },
-            new Item
-            {
-                ItemID = 8,
-                SubcategoryID = 2, //box pasta
-                Type = "Spaghetti",
-                UUID = Guid.NewGuid().ToString(),
-                Description = "Box of spaghetti pasta",
-                Quantity = 1.0m, 
-                PointCost = 2
-            },
-            new Item
-            {
-                ItemID = 9,
-                SubcategoryID = 4, //rice
-                Type = "Basmati",
-                UUID = Guid.NewGuid().ToString(),
-                Description = "Premium basmati rice",
-                Quantity = 2.0m, 
-                PointCost = 5
-            }
+        //default data for items
+        modelBuilder.Entity<Item>().HasData( //created UUID with Guid.NewGuid().ToString() the UUID will be used to create barcodes
+            new Item { ItemID = 1, SubcategoryID = 1, Type = "Gallon-Whole", UUID = "62446e0b-b4a2-4430-93e9-edcee1007375", Description = "Gallon of Whole milk", Quantity = 1, PointCost = 5 },
+            new Item { ItemID = 2, SubcategoryID = 2, Type = "Cheddar", UUID = "532026ed-b264-44e7-81a6-abd2007ffeaf", Description = "Aged cheddar cheese", Quantity = 2.5m, PointCost = 7 },
+            new Item { ItemID = 3, SubcategoryID = 3, Type = "Greek", UUID = "fcfe3fd1-d10e-4b0f-8d98-ddf2fdfa6663", Description = "Greek yogurt", Quantity = 1, PointCost = 3 },
+            new Item { ItemID = 4, SubcategoryID = 5, Type = "Apple", UUID = "e94a0402-f2f9-40e2-b423-7b8e4c65be5d", Description = "Fresh red apples", Quantity = 3, PointCost = 2 },
+            new Item { ItemID = 5, SubcategoryID = 6, Type = "Carrot", UUID = "97255123-ddc5-4cc4-8a3a-aa3a65809356", Description = "Carrots", Quantity = 5.0m, PointCost = 1 },
+            new Item { ItemID = 6, SubcategoryID = 7, Type = "Spam", UUID = "4622ef7d-72fe-4db8-8182-056d02da6cdf", Description = "Canned Spam", Quantity = 12.0m, PointCost = 6 },
+            new Item { ItemID = 7, SubcategoryID = 9, Type = "Tomato Soup", UUID = "a89ea68b-4b7a-4651-a150-ac534ddc81ae", Description = "Canned tomato soup", Quantity = 8.0m, PointCost = 3 },
+            new Item { ItemID = 8, SubcategoryID = 11, Type = "Spaghetti", UUID = "04368fd1-c129-4e1c-98c2-c4d058d713f9", Description = "Box of spaghetti pasta", Quantity = 1.0m, PointCost = 2 },
+            new Item { ItemID = 9, SubcategoryID = 12, Type = "Basmati", UUID = "7b5caca6-d148-4966-8163-2211c9545f1a", Description = "Premium basmati rice", Quantity = 2.0m, PointCost = 5 }
         );
 
 
