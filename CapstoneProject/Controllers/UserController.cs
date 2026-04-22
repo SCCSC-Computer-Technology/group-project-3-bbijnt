@@ -141,7 +141,12 @@ namespace CapstoneProject.Controllers
                 return BadRequest(new { error = "User not found" });
             }
 
-            var transactionobj = new Transaction { UserID = user.StudentId, SpecialRequests = cartList.SpecialRequests?.Trim() ?? string.Empty };
+            var transactionobj = new Transaction
+            {
+                UserID = user.StudentId,
+                SpecialRequests = cartList.SpecialRequests?.Trim() ?? string.Empty,
+                AppointmentDateTime = cartList.AppointmentDateTime
+            };
 
             if (!ModelState.IsValid)
             {
