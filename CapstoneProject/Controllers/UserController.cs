@@ -141,6 +141,12 @@ namespace CapstoneProject.Controllers
                 return BadRequest(new { error = "User not found" });
             }
 
+            var eligibility = CheckProgramEligibility(user, cartList);
+            if (!eligibility.IsEligible)
+            {
+                return BadRequest(new { error = "Not eligible", details = eligibility.Message });
+            }
+
             var transactionobj = new Transaction
             {
                 UserID = user.StudentId,
@@ -204,6 +210,54 @@ namespace CapstoneProject.Controllers
                     _logger.LogError("Validation error in field '{Field}': {ErrorMessage}", state.Key, error.ErrorMessage);
                 }
             }
+        }
+
+        private (bool IsEligible, string Message) CheckProgramEligibility(CapstoneProjectUser user, CartList cartList)
+        {
+            if (!user.IsRegistrationComplete)
+            {
+                return (false, "You must complete registration before requesting aid.");
+            }
+
+            // Liability Form check (from ERD)
+            bool hasLiability = _db.LiabilityForms.Any(l => l.UserID == user.StudentId);
+            if (!hasLiability)
+            {
+                return (false, "You must complete the liability form before requesting aid.");
+            }
+
+            if (cartList.AppointmentDateTime == null)
+            {
+                return (false, "Please select a pickup time.");
+            }
+
+            int totalCost = 0;
+
+            foreach (var cartItem in cartList.cartList)
+            {
+                var item = _db.Items.SingleOrDefault(i => i.ItemID == cartItem.Item.ItemID);
+
+                if (item == null)
+                {
+                    return (false, "An item in your cart no longer exists.");
+                }
+
+                // Inventory check
+                if (cartItem.Info.QuantityReq > item.Quantity)
+                {
+                    return (false, $"{item.Description} exceeds available inventory.");
+                }
+
+                totalCost += item.PointCost * (int)cartItem.Info.QuantityReq;
+            }
+
+            // Points check
+            if (totalCost > user.Points)
+            {
+                return (false, "You do not have enough points.");
+            }
+
+            return (true, "");
         }
 
         [Authorize(Roles = "Student")]
