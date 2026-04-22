@@ -95,9 +95,16 @@
         </tbody>
     </table>
 </div>
-    <p>Special Requests</p>
-    <textarea id="specialRequests" style="width: 100%; height: 100px;" placeholder="Enter any special requests here"></textarea>
+<p>Special Requests</p>
+<textarea id="specialRequests" style="width: 100%; height: 100px;" placeholder="Enter any special requests here"></textarea>
+
+<div class="d-flex justify-content-center mb-4">
+    <div style="width: 500px;">
+        <label class="form-label">Pickup Time:</label>
+        <input type="datetime-local" id="appointmentTime" class="form-control" />
+    </div>
 </div>
+
 <div class="d-flex justify-content-center align-items-center vh-50">
     <div class="d-grid gap-2">
         <button id="checkoutButton" class="btn btn-custom-blue" type="button" style="width: 500px; margin-bottom: 30px; margin-top: 25px">Checkout</button>
@@ -527,8 +534,9 @@
                             alert("Request submitted successfully.")
                             window.location.href = "/home/index"
                         },
-                        error: function (jqXHR, textStatus, errorThrown) {
-                            alert("Unable to process request.\nPlease try again later or contact administrator.")
+                         error: function (jqXHR, textStatus, errorThrown) {
+                            console.log(jqXHR.responseText);
+                            alert("Unable to process request.\n" + jqXHR.responseText);
                         }
                     });
             }
@@ -540,12 +548,13 @@
 
         //Reorganizes data to map onto the CartList model
         function generatePayloadJson(userID) {
-    const payloadObj =
-    {
-        'UserID': userID,
-        'SpecialRequests': $("#specialRequests").val(),
-        'cartList': []
-    }
+            const payloadObj =
+        {
+            'UserID': userID,
+            'SpecialRequests': $("#specialRequests").val(),
+            'AppointmentDateTime': $("#appointmentTime").val(),
+            'cartList': []
+        }
 
     console.log(cartList)
     for(let i = 0; i < cartList.length; i++)

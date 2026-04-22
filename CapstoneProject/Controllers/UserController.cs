@@ -141,7 +141,12 @@ namespace CapstoneProject.Controllers
                 return BadRequest(new { error = "User not found" });
             }
 
-            var transactionobj = new Transaction { UserID = user.StudentId, SpecialRequests = cartList.SpecialRequests?.Trim() ?? string.Empty };
+            var transactionobj = new Transaction
+            {
+                UserID = user.StudentId,
+                SpecialRequests = cartList.SpecialRequests?.Trim() ?? string.Empty,
+                AppointmentDateTime = cartList.AppointmentDateTime
+            };
 
             if (!ModelState.IsValid)
             {
@@ -199,6 +204,72 @@ namespace CapstoneProject.Controllers
                     _logger.LogError("Validation error in field '{Field}': {ErrorMessage}", state.Key, error.ErrorMessage);
                 }
             }
+        }
+
+        [Authorize(Roles = "Student")]
+        public async Task<IActionResult> MyRequests()
+        {
+            var user = await _userManager.GetUserAsync(User);
+
+            if (user == null)
+            {
+                return RedirectToPage("/Account/Login", new { area = "Identity" });
+            }
+
+            var requests = _db.Transactions
+                .Where(t => t.UserID == user.StudentId)
+                .Select(t => new CapstoneProject.ViewModels.MyRequestViewModel
+                {
+                    TransactionID = t.TransactionID,
+                    Date = t.Date,
+                    Status = t.IsProcessed ? "Processed" : "Pending",
+                    SpecialRequests = t.SpecialRequests,
+                    TotalCost = t.LineItems.Sum(li => li.Item.PointCost * (int)li.Quantity) + t.AdditionalPointCost
+                })
+                .OrderByDescending(t => t.TransactionID)
+                .ToList();
+
+            return View(requests);
+        }
+
+        [Authorize(Roles = "Student")]
+        public async Task<IActionResult> RequestDetails(int id)
+        {
+            var user = await _userManager.GetUserAsync(User);
+
+            if (user == null)
+            {
+                return RedirectToPage("/Account/Login", new { area = "Identity" });
+            }
+
+            var transaction = _db.Transactions
+                .Where(t => t.TransactionID == id && t.UserID == user.StudentId)
+                .Select(t => new CapstoneProject.ViewModels.MyRequestDetailsViewModel
+                {
+                    TransactionID = t.TransactionID,
+                    Date = t.Date,
+                    Status = t.IsProcessed ? "Processed" : "Pending",
+                    SpecialRequests = t.SpecialRequests,
+                    AdditionalPointCost = t.AdditionalPointCost,
+                    TotalCost = t.LineItems.Sum(li => li.Item.PointCost * (int)li.Quantity) + t.AdditionalPointCost,
+                    Items = t.LineItems.Select(li => new CapstoneProject.ViewModels.MyRequestItemViewModel
+                    {
+                        ItemID = li.ItemID,
+                        Description = li.Item.Description,
+                        Quantity = li.Quantity,
+                        PointCost = li.Item.PointCost,
+                        IsRG = li.IsRG,
+                        IsPAL = li.IsPAL
+                    }).ToList()
+                })
+                .FirstOrDefault();
+
+            if (transaction == null)
+            {
+                return NotFound();
+            }
+
+            return View(transaction);
         }
 
     }
