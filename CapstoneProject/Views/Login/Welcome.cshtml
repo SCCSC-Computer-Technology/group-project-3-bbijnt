@@ -1,0 +1,99 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chaser's Pantry'</title>
+
+    <link rel="stylesheet" href="~/css/welcome.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+<body>
+
+    <header class="navbar">
+        <div class="logo">
+            <img src="~/images/SCC-logo.png" alt="SCC Logo" />
+        </div>
+
+        <nav>
+            <a asp-area="Identity" asp-page="/Account/Login"  class="active">Home</a>
+            <a asp-area="Identity" asp-page="/Account/Login">About Us</a>
+            <a asp-area="Identity" asp-page="/Account/Login">Donate Food</a>
+            <a asp-area="Identity" asp-page="/Account/Login">Receive Aid</a>
+            <a asp-area="Identity" asp-page="/Account/Login">How It Works</a>
+             <a asp-area="Identity" asp-page="/Account/Login">Contact</a>
+        </nav>
+
+            <a asp-area="Identity" asp-page="/Account/Login" class="sign-in">
+            Sign In <i class="fa-solid fa-user"></i>
+        </a>
+    </header>
+
+    <main class="hero">
+        <section class="hero-text">
+            <h1>
+                Because Hunger<br />
+                <span>Should Never Stand</span><br />
+                in the Way
+            </h1>
+
+            <p>
+                Going hungry should never affect a student's ability to attend class and learn
+            </p>
+
+            <div class="hero-buttons">
+                <a asp-area="Identity" asp-page="/Account/Login"  class="btn primary">
+                    <i class="fa-solid fa-box-open"></i> Donate Food
+                </a>
+
+                <a asp-area="Identity" asp-page="/Account/Login" class="btn secondary">
+                    <i class="fa-solid fa-magnifying-glass"></i> Learn More
+                </a>
+            </div>
+
+           
+        </section>
+
+        <section class="hero-image">
+            <div class="circle-icon">
+                <i class="fa-solid fa-utensils"></i>
+            </div>
+
+            <div class="donation-card">
+                <img src="~/images/chaserPantry.png" alt="Chaser and food pantry logo" />
+            </div>
+        </section>
+    </main>
+
+    <section class="stats">
+        <div>
+            <i class="fa fa-clock-o"></i>
+            <h3>Hours</h3>
+            <p>Monday-Thursday from 9 am - 3 pm</p>
+        </div>
+
+        <div>
+            <i class="fa fa-phone"></i>
+            <h3>Contact</h3>
+            <p>(864) 592-4060 </p>
+        </div>
+
+        <div>
+            <i class="fa-regular fa-heart"></i>
+            <h3>AmeriCorps</h3>
+            <p>Partner Organization</p>
+        </div>
+
+        <div>
+            <i class="fa-solid fa-location-dot"></i>
+            <h3>Address</h3>
+            <p>Spartanburg (Giles) Campus - Powers Building, C-111</p>
+        </div>
+    </section>
+
+</body>
+</html>
