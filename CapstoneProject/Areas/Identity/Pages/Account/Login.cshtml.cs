@@ -78,7 +78,7 @@ namespace CapstoneProject.Areas.Identity.Pages.Account
                 // Attempt password sign-in
                 await _signInManager.PasswordSignInAsync(user, Input.Password, Input.RememberMe, false);
                 _logger.LogInformation("User logged in with Student ID.");
-                return LocalRedirect(returnUrl);
+                return RedirectToAction("Index", "Home");
             }
 
             // Show error if user not found
