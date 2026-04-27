@@ -69,20 +69,15 @@ app.MapRazorPages();
 // Map controller routes
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{controller=Login}/{action=Welcome}/{id?}");
 
 // Map area routes (if you have other areas besides Identity)
 app.MapAreaControllerRoute(
     name: "areas",
     areaName: "Areas",
-    pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+    pattern: "{area:exists}/{controller=Login}/{action=Welcome}/{id?}");
 
-// Redirect root to login page
-app.MapGet("/", context =>
-{
-    context.Response.Redirect("/Home/Index"); // or another authenticated page
-    return Task.CompletedTask;
-});
+
 
 // Seed roles
 await RoleSeeder.SeedRolesAsync(app);

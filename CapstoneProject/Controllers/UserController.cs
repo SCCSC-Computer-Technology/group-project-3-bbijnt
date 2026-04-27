@@ -1,12 +1,15 @@
-﻿using CapstoneProject.Data;
+﻿using CapstoneProject.Areas.Identity.Data;
+using CapstoneProject.Data;
 using CapstoneProject.Models;
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
 using CapstoneProject.ViewModels;
 using DocumentFormat.OpenXml.Bibliography;
-using Microsoft.CodeAnalysis.Elfie.Diagnostics;
-using CapstoneProject.Areas.Identity.Data;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis.Elfie.Diagnostics;
+using System.Net;
+using System.Net.Mail;
+using System.Text;
 
 namespace CapstoneProject.Controllers
 {
@@ -199,6 +202,91 @@ namespace CapstoneProject.Controllers
                     _logger.LogError("Validation error in field '{Field}': {ErrorMessage}", state.Key, error.ErrorMessage);
                 }
             }
+        }
+
+        public IActionResult Contact()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Contact(string Name, string Email, string Message)
+        {
+            try
+            {
+                var fromEmail = "sportsapplication206@gmail.com";
+                var password = "tvbm affx ignj gbfu";
+
+                using (SmtpClient client = new SmtpClient("smtp.gmail.com", 587))
+                {
+                    client.Credentials = new NetworkCredential(fromEmail, password);
+                    client.EnableSsl = true;
+
+                    MailMessage adminMail = new MailMessage();
+                    adminMail.To.Add(fromEmail);
+                    adminMail.From = new MailAddress(fromEmail, "Chaser's Pantry", Encoding.UTF8);
+                    adminMail.Subject = "New Contact Form Message";
+
+                    adminMail.Body = $@"
+                    <div style='font-family: Arial;'>
+                    <h2>New Contact Form Submission</h2>
+                    <p><b>Name:</b> {Name}</p>
+                    <p><b>Email:</b> {Email}</p>
+                    <p><b>Message:</b><br>{Message}</p>
+                    </div>";
+                    adminMail.IsBodyHtml = true;
+
+                    await client.SendMailAsync(adminMail);
+
+                    MailMessage userMail = new MailMessage();
+                    userMail.To.Add(Email);
+                    userMail.From = new MailAddress(fromEmail, "Chaser's Pantry", Encoding.UTF8);
+                    userMail.Subject = "We Received Your Message";
+
+                    userMail.Body = $@"
+                    <div style='font-family: Arial, sans-serif; background-color:#f4f4f4; padding:20px;'>
+                    <div style='max-width:600px; margin:auto; background:white; padding:30px; border-radius:10px;'>
+
+
+                    <h2 style='color:#004e8c; text-align:center;'>Thank You, {Name}!</h2>
+
+                    <p style='color:#333; font-size:16px;'>
+                        We’ve received your message and truly appreciate you reaching out.
+                    </p>
+
+                    <p style='color:#333; font-size:16px;'>
+                        Our team will review your message and get back to you as soon as possible.
+                    </p>
+
+                    <div style='background:#f9f9f9; padding:15px; border-radius:8px; margin-top:20px;'>
+                        <p><b>Your Message:</b></p>
+                        <p style='color:#555;'>{Message}</p>
+                    </div>
+
+                    <p style='margin-top:25px; color:#333;'>
+                        If you have any additional questions, feel free to reply to this email.
+                    </p>
+
+                    <p style='margin-top:30px; font-weight:bold; color:#004e8c;'>
+                        – Chaser's Pantry
+                    </p>
+
+                    </div>
+                    </div>";
+
+                    userMail.IsBodyHtml = true;
+
+                    await client.SendMailAsync(userMail);
+                }
+
+                ViewBag.SuccessMessage = "Your message has been sent successfully.";
+            }
+            catch
+            {
+                ViewBag.SuccessMessage = "There was a problem sending your message.";
+            }
+
+            return View();
         }
 
     }

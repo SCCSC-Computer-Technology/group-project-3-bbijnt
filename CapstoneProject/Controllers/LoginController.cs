@@ -1,17 +1,18 @@
-﻿using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
+﻿using CapstoneProject.Areas.Identity.Data;
 using CapstoneProject.Data;
 using CapstoneProject.Models;
-using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Authorization;
-using CapstoneProject.Areas.Identity.Data;
-using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages;
+using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace CapstoneProject.Controllers
 {
@@ -89,14 +90,15 @@ namespace CapstoneProject.Controllers
 				if (_httpContextAccessor.HttpContext != null)
 					await _httpContextAccessor.HttpContext.SignInAsync(IdentityConstants.ApplicationScheme, new ClaimsPrincipal(claimsIdentity), authProperties);
 
-				// Redirect to returnUrl if present, else home
-				var returnUrl = HttpContext.Request.Query["ReturnUrl"].FirstOrDefault();
-				if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
-					return Redirect(returnUrl);
+                // Redirect to returnUrl if present, else home
+                await HttpContext.SignInAsync(
+				IdentityConstants.ApplicationScheme,
+				new ClaimsPrincipal(claimsIdentity),
+				authProperties
+				);
 
-				_logger.LogInformation($"User {userFromDb.UserID} logged in successfully.");
-				return RedirectToAction("Index", "Home");
-			}
+                return RedirectToAction("Index", "Home");
+            }
 			catch (Exception ex)
 			{
 				_logger.LogError(ex, "Login failed for user {UserID}", obj?.UserID);
@@ -198,5 +200,95 @@ namespace CapstoneProject.Controllers
 				return RedirectToAction("Login");
 			}
 		}
-	}
+		public IActionResult Welcome()
+		{
+			return View();
+		}
+
+
+
+        [HttpGet]
+        public IActionResult ForgotPassword()
+        {
+            // Simply returns the view (form)
+            return View();
+        }
+
+        // Handles form submission when user clicks "Continue"
+        [HttpPost]
+        [ValidateAntiForgeryToken] // Protects against CSRF attacks
+        public IActionResult ForgotPassword(ForgotPasswordcs model)
+        {
+            // If validation fails (empty fields, invalid email, etc.)
+            if (!ModelState.IsValid)
+                return View(model);
+
+            // Try to find a matching user in the database
+            var user = _db.StaffRegisters
+                .FirstOrDefault(u => u.UserID == model.UserID && u.Email == model.Email);
+
+            // If no match found → user entered wrong info
+            if (user == null)
+            {
+                ViewBag.ErrorMessage = "No account matches that User ID and email.";
+                return View(model);
+            }
+
+            // If match is found → redirect to Reset Password page
+            // We pass the UserID so the next page knows who is resetting
+            return RedirectToAction("ResetPassword", new { userId = user.UserID });
+        }
+
+        // Loads the reset password page
+        [HttpGet]
+        public IActionResult ResetPassword(string userId)
+        {
+            // If no userId was passed → redirect back
+            if (string.IsNullOrWhiteSpace(userId))
+                return RedirectToAction("ForgotPassword");
+
+            // Create model and pre-fill UserID
+            var model = new ResetPasswordcs
+            {
+                UserID = userId
+            };
+
+            // Send model to view
+            return View(model);
+        }
+
+        // Handles password reset submission
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult ResetPassword(ResetPasswordcs model)
+        {
+            // If validation fails (password mismatch, empty fields)
+            if (!ModelState.IsValid)
+                return View(model);
+
+            // Find the user in the database
+            var user = _db.StaffRegisters.FirstOrDefault(u => u.UserID == model.UserID);
+
+            // If user somehow doesn't exist
+            if (user == null)
+            {
+                ViewBag.ErrorMessage = "User not found.";
+                return View(model);
+            }
+
+            // Update the password in the database
+            user.Password = model.NewPassword;
+
+            // Save changes to DB
+            _db.SaveChanges();
+
+            // Show success message on next page
+            TempData["success"] = "Password reset successfully.";
+
+            // Redirect back to login
+            return RedirectToAction("Login");
+        }
+
+
+    }
 }
