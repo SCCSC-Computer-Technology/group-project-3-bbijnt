@@ -1,15 +1,12 @@
-﻿using CapstoneProject.Areas.Identity.Data;
-using CapstoneProject.Data;
+﻿using CapstoneProject.Data;
 using CapstoneProject.Models;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using CapstoneProject.ViewModels;
 using DocumentFormat.OpenXml.Bibliography;
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis.Elfie.Diagnostics;
-using System.Net;
-using System.Net.Mail;
-using System.Text;
+using CapstoneProject.Areas.Identity.Data;
+using Microsoft.AspNetCore.Identity;
 
 namespace CapstoneProject.Controllers
 {
@@ -144,7 +141,12 @@ namespace CapstoneProject.Controllers
                 return BadRequest(new { error = "User not found" });
             }
 
-            var transactionobj = new Transaction { UserID = user.StudentId, SpecialRequests = cartList.SpecialRequests?.Trim() ?? string.Empty };
+            var transactionobj = new Transaction
+            {
+                UserID = user.StudentId,
+                SpecialRequests = cartList.SpecialRequests?.Trim() ?? string.Empty,
+                AppointmentDateTime = cartList.AppointmentDateTime
+            };
 
             if (!ModelState.IsValid)
             {
@@ -204,89 +206,70 @@ namespace CapstoneProject.Controllers
             }
         }
 
-        public IActionResult Contact()
+        [Authorize(Roles = "Student")]
+        public async Task<IActionResult> MyRequests()
         {
-            return View();
+            var user = await _userManager.GetUserAsync(User);
+
+            if (user == null)
+            {
+                return RedirectToPage("/Account/Login", new { area = "Identity" });
+            }
+
+            var requests = _db.Transactions
+                .Where(t => t.UserID == user.StudentId)
+                .Select(t => new CapstoneProject.ViewModels.MyRequestViewModel
+                {
+                    TransactionID = t.TransactionID,
+                    Date = t.Date,
+                    Status = t.IsProcessed ? "Processed" : "Pending",
+                    SpecialRequests = t.SpecialRequests,
+                    TotalCost = t.LineItems.Sum(li => li.Item.PointCost * (int)li.Quantity) + t.AdditionalPointCost
+                })
+                .OrderByDescending(t => t.TransactionID)
+                .ToList();
+
+            return View(requests);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Contact(string Name, string Email, string Message)
+        [Authorize(Roles = "Student")]
+        public async Task<IActionResult> RequestDetails(int id)
         {
-            try
-            {
-                var fromEmail = "sportsapplication206@gmail.com";
-                var password = "tvbm affx ignj gbfu";
+            var user = await _userManager.GetUserAsync(User);
 
-                using (SmtpClient client = new SmtpClient("smtp.gmail.com", 587))
+            if (user == null)
+            {
+                return RedirectToPage("/Account/Login", new { area = "Identity" });
+            }
+
+            var transaction = _db.Transactions
+                .Where(t => t.TransactionID == id && t.UserID == user.StudentId)
+                .Select(t => new CapstoneProject.ViewModels.MyRequestDetailsViewModel
                 {
-                    client.Credentials = new NetworkCredential(fromEmail, password);
-                    client.EnableSsl = true;
+                    TransactionID = t.TransactionID,
+                    Date = t.Date,
+                    Status = t.IsProcessed ? "Processed" : "Pending",
+                    SpecialRequests = t.SpecialRequests,
+                    AdditionalPointCost = t.AdditionalPointCost,
+                    TotalCost = t.LineItems.Sum(li => li.Item.PointCost * (int)li.Quantity) + t.AdditionalPointCost,
+                    Items = t.LineItems.Select(li => new CapstoneProject.ViewModels.MyRequestItemViewModel
+                    {
+                        ItemID = li.ItemID,
+                        Description = li.Item.Description,
+                        Quantity = li.Quantity,
+                        PointCost = li.Item.PointCost,
+                        IsRG = li.IsRG,
+                        IsPAL = li.IsPAL
+                    }).ToList()
+                })
+                .FirstOrDefault();
 
-                    MailMessage adminMail = new MailMessage();
-                    adminMail.To.Add(fromEmail);
-                    adminMail.From = new MailAddress(fromEmail, "Chaser's Pantry", Encoding.UTF8);
-                    adminMail.Subject = "New Contact Form Message";
-
-                    adminMail.Body = $@"
-                    <div style='font-family: Arial;'>
-                    <h2>New Contact Form Submission</h2>
-                    <p><b>Name:</b> {Name}</p>
-                    <p><b>Email:</b> {Email}</p>
-                    <p><b>Message:</b><br>{Message}</p>
-                    </div>";
-                    adminMail.IsBodyHtml = true;
-
-                    await client.SendMailAsync(adminMail);
-
-                    MailMessage userMail = new MailMessage();
-                    userMail.To.Add(Email);
-                    userMail.From = new MailAddress(fromEmail, "Chaser's Pantry", Encoding.UTF8);
-                    userMail.Subject = "We Received Your Message";
-
-                    userMail.Body = $@"
-                    <div style='font-family: Arial, sans-serif; background-color:#f4f4f4; padding:20px;'>
-                    <div style='max-width:600px; margin:auto; background:white; padding:30px; border-radius:10px;'>
-
-
-                    <h2 style='color:#004e8c; text-align:center;'>Thank You, {Name}!</h2>
-
-                    <p style='color:#333; font-size:16px;'>
-                        We’ve received your message and truly appreciate you reaching out.
-                    </p>
-
-                    <p style='color:#333; font-size:16px;'>
-                        Our team will review your message and get back to you as soon as possible.
-                    </p>
-
-                    <div style='background:#f9f9f9; padding:15px; border-radius:8px; margin-top:20px;'>
-                        <p><b>Your Message:</b></p>
-                        <p style='color:#555;'>{Message}</p>
-                    </div>
-
-                    <p style='margin-top:25px; color:#333;'>
-                        If you have any additional questions, feel free to reply to this email.
-                    </p>
-
-                    <p style='margin-top:30px; font-weight:bold; color:#004e8c;'>
-                        – Chaser's Pantry
-                    </p>
-
-                    </div>
-                    </div>";
-
-                    userMail.IsBodyHtml = true;
-
-                    await client.SendMailAsync(userMail);
-                }
-
-                ViewBag.SuccessMessage = "Your message has been sent successfully.";
-            }
-            catch
+            if (transaction == null)
             {
-                ViewBag.SuccessMessage = "There was a problem sending your message.";
+                return NotFound();
             }
 
-            return View();
+            return View(transaction);
         }
 
     }

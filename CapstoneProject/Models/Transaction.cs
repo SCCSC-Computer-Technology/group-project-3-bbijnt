@@ -29,5 +29,7 @@ namespace CapstoneProject.Models
         public int AdditionalPointCost { get; set; } = 0;
 
         public List<TransactionLineItem> LineItems { get; set; } = new();
+
+        public DateTime? AppointmentDateTime { get; set; }
     }
 }

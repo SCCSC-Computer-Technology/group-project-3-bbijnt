@@ -1,0 +1,69 @@
+﻿@model List<CapstoneProject.ViewModels.MyRequestViewModel>
+
+@{
+    ViewData["Title"] = "My Requests";
+}
+
+<div class="container mt-4">
+    <h2 class="mb-4">My Requests</h2>
+
+    @if (Model == null || Model.Count == 0)
+    {
+        <div class="alert alert-info">
+            You have not submitted any requests yet.
+        </div>
+    }
+    else
+    {
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>Request ID</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                    <th>Total Cost</th>
+                    <th>Special Requests</th>
+                    <th>Details</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var request in Model)
+                {
+                    <tr>
+                        <td>@request.TransactionID</td>
+                        <td>@request.Date</td>
+                        <td>
+                            @if (request.Status == "Processed")
+                            {
+                                <span class="badge bg-success">@request.Status</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-warning text-dark">@request.Status</span>
+                            }
+                        </td>
+                        <td>@request.TotalCost</td>
+                        <td>
+                            @if (string.IsNullOrWhiteSpace(request.SpecialRequests))
+                            {
+                                <span>None</span>
+                            }
+                            else
+                            {
+                                @request.SpecialRequests
+                            }
+                        </td>
+                        <td>
+                            <a asp-controller="User"
+                                   asp-action="RequestDetails"
+                                   asp-route-id="@request.TransactionID"
+                                   class="btn btn-sm btn-primary">
+                                View Details
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>

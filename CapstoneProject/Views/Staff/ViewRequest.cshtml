@@ -11,6 +11,7 @@
 <h2>User ID: @Model.UserID</h2>
 <h2>User Email: @ViewBag.email</h2>
 <h2>Request Date: @Model.Date.ToShortDateString()</h2>
+<h2>Pickup Time: @(Model.AppointmentDateTime?.ToString("M/d/yyyy h:mm tt") ?? "Not selected")</h2>
 <hr />
 @if(Model.IsProcessed)
 {
