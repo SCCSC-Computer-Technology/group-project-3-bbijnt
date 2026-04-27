@@ -40,62 +40,131 @@ body {
     box-shadow: none;
 }
 
-.navbar-custom .navbar-nav .nav-link {
-    color: white !important;
-   
+
+
+.navbar {
+    height: 115px;
+    background: #2a3867;
+    display: flex;
+    align-items: center;
+    padding: 0 60px;
+    color: white;
 }
 
-.nav-item .nav-link {
-    margin-right: 35px;
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+            .logo i {
+                font-size: 42px;
+                color: #399144;
+            }
+
+            .logo h2 {
+                font-size: 26px;
+                line-height: 1;
+            }
+
+                .logo h2 span {
+                    color: #399144;
+                }
+
+            .logo p {
+                font-size: 12px;
+                letter-spacing: 5px;
+                font-weight: 600;
+            }
+
+nav {
+    display: flex;
+    gap: 34px;
+    margin: 0 auto;
+}
+
+    nav a {
+        text-decoration: none;
+        color: white;
+        text-transform: uppercase;
+        font-size: 14px;
+        font-weight: 700;
+        position: relative;
+        white-space: nowrap;
+    }
+
+                nav a.active,
+                nav a:hover {
+                    color: #399144;
+                }
+
+                    nav a.active::after,
+                    nav a:hover::after {
+                        content: "";
+                        position: absolute;
+                        left: 0;
+                        bottom: -9px;
+                        width: 100%;
+                        height: 3px;
+                        background: #399144;
+                        border-radius: 20px;
+                    }
+
+.sign-in {
+    background: #399144;
+    color: white;
+    text-decoration: none;
+    padding: 16px 24px;
+    border-radius: 8px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: 0.3s ease;
+    margin-left: auto;
     white-space: nowrap;
-    font-size: 18px;
-    padding-bottom: 1px; 
-    padding-top: 1px;
-    padding-left: 20px;
-    padding-right: 20px;
 }
 
-/* green footer style */
-.footer-green {
-    background-color: #349444;
-    color: white;
-    padding: 1rem 0;
-    text-align: center;
-}
-
-/* blue footer style */
-.footer-blue {
-    background-color: #242c5c;
-    color: white;
-    padding: 1rem 0;
-    text-align: center;
-}
-
-/* food pantry text style */
-.food-pantry-text {
-    font-size: 54px;
-    color: #349444;
-    font-family: 'brandon_bld';
-}
-
-/* chaser food pantry logo style */
-.chaser-img {
-    max-width: 75%;
-    height: auto;
-}
-
-/* the slogan */
-.slogan-text {
-    font-size: 1.25rem;
-    color: #242c5c;
-    padding: 1rem 0;
-}
-
-/*background image for login*/
-.bg-image-custom{
-    background-image: url(/Images/scc.jpg);
-    background-size: cover;
-    background-position: center;
-    height: 400px;
-}
+            .sign-in:hover {
+                background: #2f7d38;
+                transform: translateY(-2px);
+            }
+        /* green footer style */
+        .footer-green {
+            background-color: #349444;
+            color: white;
+            padding: 1rem 0;
+            text-align: center;
+        }
+        /* blue footer style */
+        .footer-blue {
+            background-color: #242c5c;
+            color: white;
+            padding: 1rem 0;
+            text-align: center;
+        }
+        /* food pantry text style */
+        .food-pantry-text {
+            font-size: 54px;
+            color: #349444;
+            font-family: 'brandon_bld';
+        }
+        /* chaser food pantry logo style */
+        .chaser-img {
+            max-width: 75%;
+            height: auto;
+        }
+        /* the slogan */
+        .slogan-text {
+            font-size: 1.25rem;
+            color: #242c5c;
+            padding: 1rem 0;
+        }
+        /*background image for login*/
+        .bg-image-custom {
+            background-image: url(/Images/scc.jpg);
+            background-size: cover;
+            background-position: center;
+            height: 400px;
+        }
 
