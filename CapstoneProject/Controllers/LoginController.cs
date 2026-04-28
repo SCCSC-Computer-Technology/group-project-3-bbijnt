@@ -24,9 +24,10 @@ namespace CapstoneProject.Controllers
 		private readonly SignInManager<CapstoneProjectUser> _signInManager;
 		private readonly ILogger<LoginController> _logger;
 		private readonly IConfiguration _config;
+        private readonly IPasswordHasher<CapstoneProjectUser> _passwordHasher;
 
-		// Inject configuration for demo user IDs
-		public LoginController(CapstoneProjectDbContext db, IHttpContextAccessor httpContextAccessor, UserManager<CapstoneProjectUser> userManager, SignInManager<CapstoneProjectUser> signInManager, ILogger<LoginController> logger, IConfiguration config)
+        // Inject configuration for demo user IDs
+        public LoginController(CapstoneProjectDbContext db, IHttpContextAccessor httpContextAccessor, UserManager<CapstoneProjectUser> userManager, SignInManager<CapstoneProjectUser> signInManager, ILogger<LoginController> logger, IConfiguration config, IPasswordHasher<CapstoneProjectUser> passwordHasher)
 		{
 			_db = db;
 			_httpContextAccessor = httpContextAccessor;
@@ -34,11 +35,12 @@ namespace CapstoneProject.Controllers
 			_signInManager = signInManager;
 			_logger = logger;
 			_config = config;
-		}
+            _passwordHasher = passwordHasher;
+        }
 
-		// GET: /Login
-		// Shows the login page, or redirects if already authenticated
-		[HttpGet]
+        // GET: /Login
+        // Shows the login page, or redirects if already authenticated
+        [HttpGet]
 		public IActionResult Login()
 		{
 			try
@@ -224,8 +226,8 @@ namespace CapstoneProject.Controllers
                 return View(model);
 
             // Try to find a matching user in the database
-            var user = _db.StaffRegisters
-                .FirstOrDefault(u => u.UserID == model.UserID && u.Email == model.Email);
+            var user = _db.Users
+                .FirstOrDefault(u => u.StudentId == model.UserID && u.Email == model.Email);
 
             // If no match found → user entered wrong info
             if (user == null)
@@ -236,7 +238,7 @@ namespace CapstoneProject.Controllers
 
             // If match is found → redirect to Reset Password page
             // We pass the UserID so the next page knows who is resetting
-            return RedirectToAction("ResetPassword", new { userId = user.UserID });
+            return RedirectToAction("ResetPassword", new { userId = user.StudentId });
         }
 
         // Loads the reset password page
@@ -267,7 +269,7 @@ namespace CapstoneProject.Controllers
                 return View(model);
 
             // Find the user in the database
-            var user = _db.StaffRegisters.FirstOrDefault(u => u.UserID == model.UserID);
+            var user = _db.Users.FirstOrDefault(u => u.StudentId == model.UserID);
 
             // If user somehow doesn't exist
             if (user == null)
@@ -277,7 +279,7 @@ namespace CapstoneProject.Controllers
             }
 
             // Update the password in the database
-            user.Password = model.NewPassword;
+            user.PasswordHash = _passwordHasher.HashPassword(user, model.NewPassword);
 
             // Save changes to DB
             _db.SaveChanges();
@@ -285,8 +287,8 @@ namespace CapstoneProject.Controllers
             // Show success message on next page
             TempData["success"] = "Password reset successfully.";
 
-            // Redirect back to login
-            return RedirectToAction("Login");
+			// Redirect back to login
+			return Redirect("/Identity/Account/Login");
         }
 
 
