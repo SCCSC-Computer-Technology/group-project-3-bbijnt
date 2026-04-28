@@ -126,6 +126,28 @@ namespace CapstoneProject.Controllers
             return RedirectToAction("Index", "Home");
         }
 
+        [HttpGet]
+        public IActionResult DonationForm()
+        {
+            return View(new ScheduledDonation());
+        }
+
+        [HttpPost]
+        public IActionResult DonationForm(ScheduledDonation scheduledDonation)
+        {
+            if (!ModelState.IsValid)
+            {
+                TempData["error"] = "The donation form did not submit. Check the required fields.";
+                return View(scheduledDonation);
+            }
+
+            _db.ScheduledDonations.Add(scheduledDonation);
+            _db.SaveChanges();
+
+            TempData["success"] = "Donation scheduled successfully!";
+            return RedirectToAction("Index", "Home");
+        }
+
 
         // POST: /User/PostTransaction (handles cart/transaction submission)
         [HttpPost]
