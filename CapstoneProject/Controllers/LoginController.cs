@@ -279,7 +279,7 @@ namespace CapstoneProject.Controllers
             }
 
             // Update the password in the database
-            user.PasswordHash = _passwordHasher.HashPassword(user, model.NewPassword);
+            user.PasswordHash = _passwordHasher.HashPassword(user, model.NewPassword); //hash the new password before replacing
 
             // Save changes to DB
             _db.SaveChanges();
