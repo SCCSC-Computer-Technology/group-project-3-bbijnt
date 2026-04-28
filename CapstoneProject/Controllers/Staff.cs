@@ -347,8 +347,8 @@ namespace CapstoneProject.Controllers
 
             if (user == null)
             {
-                
-                TempData["Error"] = "User Does not Exist";
+                //Pop up top right that user doesnt exist
+                TempData["error"] = "User Does not Exist";
                 return View();
                 //return NotFound();
             }
