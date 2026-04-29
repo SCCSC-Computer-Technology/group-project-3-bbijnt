@@ -329,7 +329,7 @@ namespace CapstoneProject.Controllers
                 return BadRequest(ex.Message);
             }
         }
-
+        
         public IActionResult FindUser()
         {
             return View();
@@ -347,7 +347,10 @@ namespace CapstoneProject.Controllers
 
             if (user == null)
             {
-                return NotFound();
+                //Pop up top right that user doesnt exist
+                TempData["error"] = "User Does not Exist";
+                return View();
+                //return NotFound();
             }
 
             return RedirectToAction("UserDetails", user);

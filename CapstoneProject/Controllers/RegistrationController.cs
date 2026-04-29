@@ -118,12 +118,21 @@ namespace CapstoneProject.Controllers
 
                 obj.RenewalDate = obj.Date.AddYears(1);
 
+                //Trys to add LiabilityForm if not gives an error message
+                try
+                {
+                    _db.LiabilityForms.Add(obj);
+                    _db.SaveChanges();
 
-                _db.LiabilityForms.Add(obj);
-                _db.SaveChanges();
+                    TempData["success"] = "Liability Form created successfully";
+                    return RedirectToAction("Index", "Home");
+                }
+                catch (Exception e)
+                {
+                    TempData["Error"] = "Liability Form Already Created";
+                    return RedirectToAction("Index", "Home");
+                }
 
-                TempData["success"] = "Liability Form created successfully";
-                return RedirectToAction("Index", "Home");
             }
             return View(obj);
         }
