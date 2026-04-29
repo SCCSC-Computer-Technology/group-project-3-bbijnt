@@ -427,5 +427,33 @@ namespace CapstoneProject.Controllers
             _db.SaveChanges();
             return Ok();
         }
+
+        public IActionResult ScheduledDonations()
+        {
+            var scheduledDonations = _db.ScheduledDonations
+                .OrderBy(x => x.IsCompleted)
+                .ThenBy(x => x.ScheduledDropOffTime)
+                .ToList();
+
+            return View(scheduledDonations);
+        }
+
+        [HttpPost]
+        public IActionResult CompleteScheduledDonation(int id)
+        {
+            var scheduledDonation = _db.ScheduledDonations.Find(id);
+
+            if (scheduledDonation == null)
+            {
+                return NotFound();
+            }
+
+            scheduledDonation.IsCompleted = true;
+            _db.ScheduledDonations.Update(scheduledDonation);
+            _db.SaveChanges();
+
+            TempData["success"] = "Scheduled donation marked as completed.";
+            return RedirectToAction("ScheduledDonations");
+        }
     }
 }
