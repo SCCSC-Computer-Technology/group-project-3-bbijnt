@@ -25,6 +25,7 @@ public class CapstoneProjectDbContext : IdentityDbContext<CapstoneProjectUser>
     public DbSet<UserSurvey> UserSurveys { get; set; }
     public DbSet<ItemCategory> ItemCategories { get; set; }
     public DbSet<ItemSubcategory> ItemSubcategories { get; set; }
+    public DbSet<ScheduledDonation> ScheduledDonations { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
